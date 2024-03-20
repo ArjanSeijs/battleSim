@@ -29,6 +29,7 @@ function getRemainingUses(creature: Creature, rest: 'none'|'short rest'|'long re
 // Used to generate monsters, never players
 export function creatureToCombattant(creature: Creature) {
     const creatureState: CreatureState = {
+        hitDieRemaining: creature.class ? creature.class?.level : 0,
         buffs: new Map(),
         currentHP: creature.hp,
         remainingUses: getRemainingUses(creature, 'long rest'),
@@ -706,7 +707,8 @@ export function runSimulation(players: Creature[], encounters: Encounter[]) {
                 ...player, 
                 name: (player.count > 1) ? `${player.name} ${i+1}` : player.name 
             },
-            state: { 
+            state: {
+                hitDieRemaining: player.class?.level || 0,
                 buffs: new Map<string, Buff>(),
                 upcomingBuffs: new Map<string, Buff>(),
                 currentHP: player.hp, 
@@ -723,8 +725,16 @@ export function runSimulation(players: Creature[], encounters: Encounter[]) {
         const lastRound = encounterResult.rounds[encounterResult.rounds.length - 1]
         const nextEncounter = encounters[index + 1]
         playersWithState = lastRound.team1.map(({ creature, finalState }) => {
+
+            const clamp = (n : number, min : number, max : number) => Math.min(Math.max(n, min) ,max)
+            const heal = !creature.hitDie ? 0 : ((creature.hitDie + 1) / 2)
+            const lost = Math.ceil(creature.hp - finalState.currentHP)
+            const use = clamp(Math.ceil(lost / heal), 0, finalState.hitDieRemaining || 0)
+            const newHP = Math.min(finalState.currentHP + Math.ceil(heal * use), creature.hp)
+
             const state: CreatureState = {
-                currentHP: nextEncounter?.shortRest ? creature.hp : finalState.currentHP,
+                hitDieRemaining: finalState.hitDieRemaining ? finalState.hitDieRemaining - use : 0,
+                currentHP: nextEncounter?.shortRest ? newHP : finalState.currentHP,
                 buffs: new Map(),
                 upcomingBuffs: new Map(),
                 remainingUses: getRemainingUses(creature, nextEncounter?.shortRest ? 'short rest' : 'none', finalState.remainingUses),

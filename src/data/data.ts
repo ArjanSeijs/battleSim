@@ -20,12 +20,14 @@ function artificer(level: number, options: z.infer<typeof ClassOptions.artificer
     const fireBolt = `${cantrip(level)}d10`
     const arcaneFireArm = scale(level, {1: '', 6: '+1d8[Arcane Firearm]'})
 
+    const dieSize = 8;
     const result: Creature = {
         id: uuid(),
         name: name('Artificer', level),
         AC: AC,
         saveBonus: scale(level, {1: PB, 20: PB + 6}),
-        hp: hp(level, 8, CON),
+        hp: hp(level, dieSize, CON),
+        hitDie: dieSize,
         count: 1,
         mode: 'player',
         actions: scaleArray<Action>(level, {
@@ -90,12 +92,14 @@ function barbarian(level: number, options: z.infer<typeof ClassOptions.barbarian
     const PB = pb(level)
     const RAGE = scale(level, { 1: 2, 9: 3, 16: 4 })
 
+    const dieSize = 12;
     const result: Creature = {
         id: uuid(),
         name: name('Barbarian', level),
         AC: 10 + DEX + CON,
         saveBonus: PB,
-        hp: hp(level, 12, CON),
+        hp: hp(level, dieSize, CON),
+        hitDie: dieSize,
         count: 1,
         mode: 'player',
         actions: scaleArray<Action>(level, {
@@ -193,12 +197,14 @@ function bard(level: number, options: z.infer<typeof ClassOptions.bard>): Creatu
     const DC = 8 + PB + CHA
     const BARDIC_INSPI = scale(level, {1: '1d6', 5: '1d8', 10: '1d10', 15: '1d12'})
 
+    const dieSize = 8;
     const result: Creature = {
         id: uuid(),
         name: name('Bard', level),
         AC: 13 + DEX,
         saveBonus: PB,
-        hp: hp(level, 8, CON),
+        hp: hp(level, dieSize, CON),
+        hitDie: dieSize,
         count: 1,
         mode: 'player',
         actions: scaleArray<Action>(level, {
@@ -277,13 +283,15 @@ function cleric(level: number, options: z.infer<typeof ClassOptions.cleric>): Cr
     const PB = pb(level)
     const DC = 8 + PB + WIS
     const toHit = PB + WIS
-    
+
+    const dieSize = 8;
     return {
         id: uuid(),
         name: name('Cleric', level),
         AC: scale(level, { 1: 17, 3: 18, 5: 19, 8: 20 }),
         saveBonus: PB,
-        hp: hp(level, 8, CON),
+        hp: hp(level, dieSize, CON),
+        hitDie: dieSize,
         count: 1,
         mode: 'player',
         actions: scaleArray<Action>(level, {
@@ -372,6 +380,7 @@ function druid(level: number, options: z.infer<typeof ClassOptions.druid>): Crea
     const PB = pb(level)
     const DC = 8 + PB + WIS
     const toHit = PB + WIS
+    const dieSize = 8;
 
     if (level === 1) {
         return {
@@ -379,7 +388,8 @@ function druid(level: number, options: z.infer<typeof ClassOptions.druid>): Crea
             name: name('Druid', level),
             AC: 14 + DEX,
             saveBonus: PB,
-            hp: hp(level, 8, CON),
+            hp: hp(level, dieSize, CON),
+            hitDie: dieSize,
             count: 1,
             mode: 'player',
             actions: [
@@ -422,7 +432,8 @@ function druid(level: number, options: z.infer<typeof ClassOptions.druid>): Crea
         name: name('Druid', level),
         AC: wildshape.AC,
         saveBonus: PB,
-        hp: hp(level, 8, CON),
+        hp: hp(level, dieSize, CON),
+        hitDie: dieSize,
         count: 1,
         mode: 'player',
         actions: scaleArray<Action>(level, {
@@ -495,12 +506,14 @@ function fighter(level: number, options: z.infer<typeof ClassOptions.fighter>): 
             + (options.gwm ? ' + 10[GWM]' : '')
     }
 
+    const dieSize = 10;
     return {
         id: uuid(),
         name: name('Fighter', level),
         AC: AC,
         saveBonus: PB,
-        hp: hp(level, 10, CON),
+        hp: hp(level, dieSize, CON),
+        hitDie: dieSize,
         count: 1,
         mode: 'player',
         actions: scaleArray<Action>(level, {
@@ -561,12 +574,14 @@ function monk(level: number, options: z.infer<typeof ClassOptions.monk>): Creatu
 
     const martialArtsDie = scale(level, {1: '1d4', 5: '1d6', 11: '1d8', 17: '1d10'})
 
+    const dieSize = 8;
     return {
         id: uuid(),
         name: name('Monk', level),
         AC: AC,
         saveBonus: scale(level, {1: PB, 14: PB + 3}),
-        hp: hp(level, 8, CON),
+        hp: hp(level, dieSize, CON),
+        hitDie: dieSize,
         count: 1,
         mode: 'player',
         actions: scaleArray<Action>(level, {
@@ -626,12 +641,14 @@ function paladin(level: number, options: z.infer<typeof ClassOptions.paladin>): 
         + (options.weaponBonus ? ` + ${options.weaponBonus}[WEAPON]` : '')
         + (options.gwm ? ` - 5[GWM]` : '')
 
+    const dieSize = 10;
     return {
         id: uuid(),
         name: name('Paladin', level),
         AC: AC,
         saveBonus: PB,
-        hp: hp(level, 10, CON),
+        hp: hp(level, dieSize, CON),
+        hitDie: dieSize,
         count: 1,
         mode: 'player',
         actions: scaleArray<Action>(level, {
@@ -710,13 +727,15 @@ function ranger(level: number, options: z.infer<typeof ClassOptions.ranger>): Cr
         + (level > 1 ? ' + 2[ARCHERY]' : '')
         + (options.weaponBonus ? ` + ${options.weaponBonus}[WEAPON]` : '')
         + (options.ss ? ` - 5[SS]` : '')
-    
+
+    const dieSize = 10;
     return {
         id: uuid(),
         name: name('Ranger', level),
         AC: AC,
         saveBonus: PB,
-        hp: hp(level, 10, CON),
+        hp: hp(level, dieSize, CON),
+        hitDie: dieSize,
         count: 1,
         mode: 'player',
         actions: scaleArray<Action>(level, {
@@ -756,12 +775,14 @@ function rogue(level: number, options: z.infer<typeof ClassOptions.rogue>): Crea
         + (options.weaponBonus ? ` + ${options.weaponBonus}[WEAPON]` : '')
         + (options.ss ? ` - 5[SS]` : '')
 
+    const dieSize = 8;
     return {
         id: uuid(),
         name: name('Rogue', level),
         AC: AC,
         saveBonus: PB,
-        hp: hp(level, 8, CON),
+        hp: hp(level, dieSize, CON),
+        hitDie: dieSize,
         count: 1,
         mode: 'player',
         actions: scaleArray<Action>(level, {
@@ -843,12 +864,14 @@ function sorcerer(level: number, options: z.infer<typeof ClassOptions.sorcerer>)
     const toHit = PB + CHA
     const DC = 8 + PB + CHA
 
+    const dieSize = 6;
     return {
         id: uuid(),
         name: name('Sorcerer', level),
         AC: AC,
         saveBonus: PB,
-        hp: hp(level, 6, CON),
+        hp: hp(level, dieSize, CON),
+        hitDie: dieSize,
         count: 1,
         mode: 'player',
         actions: scaleArray<Action>(level, {
@@ -911,12 +934,14 @@ function warlock(level: number, options: z.infer<typeof ClassOptions.warlock>): 
     const DC = 8 + PB + CHA
     const toHit = PB + CHA
 
+    const dieSize = 8;
     return {
         id: uuid(),
         name: name('Warlock', level),
         AC: AC,
         saveBonus: PB,
-        hp: hp(level, 8, CON),
+        hp: hp(level, dieSize, CON),
+        hitDie: dieSize,
         count: 1,
         mode: 'player',
         actions: scaleArray<Action>(level, {
@@ -957,12 +982,14 @@ function wizard(level: number, options: z.infer<typeof ClassOptions.wizard>): Cr
     const toHit = PB + INT
     const DC = 8 + PB + INT
 
+    const dieSize = 6;
     return {
         id: uuid(),
         name: name('Wizard', level),
         AC: AC,
         saveBonus: PB,
-        hp: hp(level, 6, CON),
+        hp: hp(level, dieSize, CON),
+        hitDie: dieSize,
         count: 1,
         mode: 'player',
         actions: scaleArray<Action>(level, {

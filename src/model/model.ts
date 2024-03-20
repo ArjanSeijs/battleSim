@@ -156,6 +156,7 @@ export const CreatureSchema = z.object({
     type: CreatureTypeSchema.optional(),
     cr: ChallengeRatingSchema.optional(),
     src: z.string().optional(),
+    hitDie : z.number().optional(),
     
     // Properties for player characters. Not used by the simulator, but used by the PC template UI.
     class: z.object({
@@ -176,6 +177,7 @@ export const CreatureSchema = z.object({
 const TeamSchema = z.array(CreatureSchema)
 
 const CreatureStateSchema = z.object({
+    hitDieRemaining : z.number().optional(),
     currentHP: z.number(),
     tempHP: z.number().optional(),
     buffs: z.map(z.string(), BuffSchema),

@@ -69,6 +69,10 @@ const CustomForm:FC<PropType> = ({ value, onChange }) => {
                 </div>
             </section>
             <section>
+                <h3>Hit Die</h3>
+                <DecimalInput value={value.hitDie} onChange={hitDie => update(v => {v.hitDie = hitDie || 0})} />
+            </section>
+            <section>
                 <h3>Hit Points</h3>
                 <DecimalInput min={0} value={value.hp} onChange={hp => update(v => { v.hp = hp || 0 })} />
             </section>
@@ -81,7 +85,7 @@ const CustomForm:FC<PropType> = ({ value, onChange }) => {
                 <DecimalInput min={0} value={value.saveBonus} onChange={save => update(v => { v.saveBonus = save || 0 })} />
                 <div className="tooltip">Average of all saves' bonuses. For player characters, you can use the Proficiency Bonus. For monsters, either calculate it, or just use half of the monster's CR.</div>
             </section>
-            
+
             <h3 className={styles.actionsHeader}>
                 <span className={styles.label}>Actions</span>
                 <button
@@ -102,8 +106,8 @@ const CustomForm:FC<PropType> = ({ value, onChange }) => {
             </div>
 
             { isLoading ? (
-                <LoadCreatureForm 
-                    onLoad={(creature) => { onChange(creature); setIsLoading(false) }} 
+                <LoadCreatureForm
+                    onLoad={(creature) => { onChange(creature); setIsLoading(false) }}
                     onCancel={() => setIsLoading(false)} />
             ) : null}
         </div>
